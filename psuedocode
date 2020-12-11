@@ -1,0 +1,47 @@
+[to-do item properties]
+title
+description
+due date
+priority
+notes?
+checklist?
+
+[to-do class]
+contain all the items
+broken into projects
+should be able to make and delete projects
+
+
+[gui]
+kinda like this: https://en.todoist.com/
+
+break down by today, scheduled
+
+also projects + 
+should have a + project
+project view should have a 'preview' # of items in it
+subtasks should be more tasks?
+
+or like onenote
+
+[process]
+click add to-do
+should open a prompt to enter the 'to do', description, due date (if any) and a priority
+once complete you should be able to submit or cancel ( or click outside the box )
+
+so it needs to 
+1. draw the popup for the to-do, and make that object on submit
+2. draw the popup for the project and add on submit
+
+
+
+
+basic page should be there, no projects or taks though (should be js)
+
+
+click add-project
+should open a prompt to add a project title
+
+
+[where do i put these topics]
+try and use composition??
