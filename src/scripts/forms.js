@@ -30,10 +30,12 @@ const getFormFooter = () => {
     cancelButton.textContent = 'Cancel';
     cancelButton.classList.add('button', 'cancel');
     cancelButton.type = 'button';
+    cancelButton.value = 'cancel';
 
     addButton.textContent = 'Add';
     addButton.classList.add('button', 'add');
     addButton.type = 'button';
+    addButton.value = 'add';
 
 
     parent.appendChild(cancelButton);

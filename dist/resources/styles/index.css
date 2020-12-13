@@ -5,8 +5,8 @@
     /* border: 0 */
 }
 
-h1 {
-    /* color: white; */
+li {
+    list-style-type: none;
 }
 
 #todo-app {
@@ -104,5 +104,55 @@ h1 {
     right: 0;
     left: 0;
     bottom: 0;
+    /* pointer-events: all; */
 }
 
+.las {
+    margin: 0 5px;
+}
+
+.project-actions {
+    display: inline-block;
+}
+
+.add-project {
+    display: flex;
+    justify-items: center;
+}
+
+.add-project:hover > p {
+    color: red;
+}
+
+.add-project:hover > .las {
+    background-color: red;
+    border-radius: 50%;
+    color: white;
+    width: auto;
+    text-align:  center;
+}
+
+.projects {
+    padding: 15px;
+}
+
+.todos-list {
+    display: flex;
+    justify-content: center;
+    max-width: 70%;
+    margin: auto;
+}
+
+.todo-li {
+    border: 1px solid black;
+    width: 100%;
+}
+
+.todo-item {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.todo-item > div, input[type='checkbox'] {
+    margin: 10px;
+}

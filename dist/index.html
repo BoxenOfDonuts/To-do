@@ -1,44 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="resources/styles/index.css">
-    <title>To-Do</title>
-</head>
-<body>
-    <div class="content">
-    <div id="todo-app">
-        <div class="project-tab">
-            <h1>Projects</h1>
-            <hr>
-        </div>
-        <div class="task-tab">
-            <h1>Projects</h1>
-            <hr>
-            <!-- <div class="form project-form">
-                <div class="form-container">
-                <div class="form-header">
-                    <h1>Add a project</h1>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="resources/styles/index.css" />
+        <link
+            rel="stylesheet"
+            href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css"
+        />
+        <title>To-Do</title>
+    </head>
+    <body>
+        <div class="content">
+            <div id="todo-app">
+                <div class="project-tab">
+                    <div class="project-header">
+                        <h1>Projects</h1>
+                        <hr />
+                    </div>
+                    <div class="projects">
+                    </div>
+                    <div class="project-actions">
+                        <div class="action add-project">
+                            <i class="las la-plus"></i>
+                            <p>Add Project</p>
+                        </div>
+                    </div>
                 </div>
-                
-                <form class=form-body>
-
-                    <label for='title'>Project Name</label>
-                    <input type='text' placeholder="My Project" name="title">
-
-                    <label for='description'>Project description</label>
-                    <input type='text' placeholder="My first project" name="description">
-                </form>
-                <footer class="form-footer">
-                    <button type="button" class="button cancel">Cancel</button>
-                    <button type="button" class="button add">Add</button>
-                </footer>
+                <div class="task-tab">
+                    <h1>Projects</h1>
+                    <hr />
+                    <div class='todos-list'>
+                        
+                    </div>
+                </div>
             </div>
-            </div> -->
         </div>
-    </div>
-    </div>
-    <script src="main.js"></script>
-</body>
+        <script src="main.js"></script>
+    </body>
 </html>
