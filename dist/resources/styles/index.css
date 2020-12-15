@@ -80,6 +80,10 @@ li {
       color: white;
   }
 
+  .add:disabled {
+    background-color: #f4cac6;
+  }
+
   .form-header {
       /* background-color: grey; */
       padding: 10px;
@@ -115,16 +119,16 @@ li {
     display: inline-block;
 }
 
-.add-project {
+.action {
     display: flex;
     justify-items: center;
 }
 
-.add-project:hover > p {
+.action:hover > p {
     color: red;
 }
 
-.add-project:hover > .las {
+.action:hover > .las {
     background-color: red;
     border-radius: 50%;
     color: white;
@@ -156,3 +160,28 @@ li {
 .todo-item > div, input[type='checkbox'] {
     margin: 10px;
 }
+
+.todo-form {
+    background-color: white;
+}
+
+.todo-footer > .button {
+    margin: 0 10px 0 0;
+}
+
+.todo-footer {
+    justify-content: flex-start;
+}
+
+.todo-container {
+    padding: 10px 20px 0;
+}
+
+.todo-container input[type=text] {
+    border: none;
+    width: 100%;
+}
+
+input[type=text]:focus {
+    outline:none;
+} 
