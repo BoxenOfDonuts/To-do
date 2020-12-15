@@ -93,14 +93,23 @@ const displayController = (() => {
         projects.appendChild(projectList)
     }
 
+    const _drawAddActions = (title) => {
+        const parent = document.createElement('li')
+        parent.innerHTML =  `<div class="action add-todo">
+                    <i class="las la-plus"></i>
+                    <p>${title}</p>
+                </div>`
+        return parent;
+    }
+
     const drawProjectToDos = (key) => {
         const parent = document.querySelector('.todos-list');
-        _clearChildNodesOf(parent)
-        let array = projectController.listProjectItems(key)
-        console.log(array)
-        const list = document.createElement('ul')
-        let counter = 0
-
+        _clearChildNodesOf(parent);
+        let array = projectController.listProjectItems(key);
+        const list = document.createElement('ul');
+        list.appendChild(_drawAddActions("Add Task"));
+        let counter = 0;
+        
         array.forEach((object) => {
             const li = _todoLayout(
                 object.description(),
@@ -111,7 +120,7 @@ const displayController = (() => {
             list.appendChild(li)
             counter++
         })
-
+        
         parent.appendChild(list)
     }
 
