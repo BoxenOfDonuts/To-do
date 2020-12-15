@@ -1,6 +1,6 @@
 import { divFactory, createText } from "./utils"
 
-const formElements = (labelContent, placeholder, name, type) => {
+const formElements = (labelContent, placeholder, name, type, classN) => {
     const label = document.createElement('label');
     const input = document.createElement('input');
 
@@ -10,6 +10,11 @@ const formElements = (labelContent, placeholder, name, type) => {
     input.type = type;
     input.placeholder = placeholder;
     input.name = name;
+    input.classList.add(classN)
+    input.autocomplete = "off";
+    if (name === 'title') {
+        input.required = true;
+    }
 
     return { input, label }
 
@@ -47,8 +52,8 @@ const getFormFooter = () => {
 const getFormInputs = () => {
     const parent = divFactory('form-container');
     const wrapper = divFactory('form-body')
-    const projectName = formElements('Project Name', '', 'title', 'text');
-    const description = formElements('Project Description', '', 'My first project', 'text');
+    const projectName = formElements('Project Name', '', 'title', 'text', 'name');
+    const description = formElements('Project Description', '', 'My first project', 'text', 'desc');
 
     wrapper.appendChild(projectName.label);
     wrapper.appendChild(projectName.input);

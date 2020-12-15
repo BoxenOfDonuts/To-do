@@ -13,10 +13,10 @@ const divFactory = (...classNames) => {
 const createText = (content, type) => {
     const text = document.createElement(type)
     
-    if (content) {
+    if (content || content === 0) {
         text.innerText = content;
     }
-
+    
     return text
 }
 
