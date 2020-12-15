@@ -1,77 +1,6 @@
 import { generateProjectForm } from './scripts/forms'
 import { divFactory, createText } from './scripts/utils'
-
-const getTitle = (data) => ({
-    title: () => data.title,
-})
-
-const getDescription = (data) => ({
-    description: () => data.description,
-})
-
-const getDueDate = (data) => ({
-    dueDate: () => data.dueDate,
-})
-
-const getPriority = (data) => ({
-    priority: () => data.priority,
-})
-
-const getToDos = (data) => ({
-    // getItems: () => {
-    //     data.list.forEach(item => {
-    //         console.log(item.title())
-    //     })
-    // }
-
-    getItems: () => data.list,
-})
-
-const pushNewItem = (data) => ({
-    addItem: (item) => {
-        data.list.push(item)
-    },
-})
-
-const getNumberTodos = (data) => ({
-    numberOf: () => data.list.length,
-    test: () => data.description,
-})
-
-const todoItem = (title, description, dueDate, priority) => {
-    const data = {
-        title,
-        description,
-        dueDate,
-        priority,
-    }
-
-    return Object.assign(
-        {},
-        getTitle(data),
-        getDescription(data),
-        getDueDate(data),
-        getPriority(data)
-    )
-}
-
-const projectItem = (title, description) => {
-    let data = {
-        title,
-        description,
-        list: [],
-        item: '',
-    }
-
-    return Object.assign(
-        {},
-        getTitle(data),
-        getDescription(data),
-        getToDos(data),
-        pushNewItem(data),
-        getNumberTodos(data)
-    )
-}
+import { projectItem, todoItem } from './scripts/objects'
 
 const displayController = (() => {
     const _projectItemLayout = (name, count) => {
@@ -136,15 +65,15 @@ const displayController = (() => {
 
     }
 
-    const _clearProjects = () => {
-        const parent = document.querySelector('.projects');
-        while (parent.firstElementChild) {
-            parent.firstElementChild.remove()
+    const _clearChildNodesOf = (node) => {
+        while (node.firstElementChild) {
+            node.firstElementChild.remove()
         }
     }
 
     const drawProjects = () => {
-        _clearProjects()
+        const parent = document.querySelector('.projects');
+        _clearChildNodesOf(parent);
         let array = projectController.listProjects()
         const projects = document.querySelector('.projects')
         const projectList = document.createElement('ul')
@@ -165,9 +94,10 @@ const displayController = (() => {
     }
 
     const drawProjectToDos = (key) => {
+        const parent = document.querySelector('.todos-list');
+        _clearChildNodesOf(parent)
         let array = projectController.listProjectItems(key)
         console.log(array)
-        const parent = document.querySelector('.todos-list')
         const list = document.createElement('ul')
         let counter = 0
 
@@ -248,7 +178,16 @@ function grabForm() {
     displayController.drawProjects()
 }
 
+const projects = document.querySelector('.projects');
+projects.addEventListener('click', e => {
+    const projectItem = e.target.closest('li');
+    if (!projectItem) return;
+    const key = projectItem.dataset.projectKey;
+    console.log(key);
 
+    displayController.drawProjectToDos(key);
+
+})
 
 
 
@@ -284,4 +223,4 @@ projectController.addProject(project3)
 // projectController.addProject(project1);
 displayController.drawProjects()
 
-displayController.drawProjectToDos(0)
+// displayController.drawProjectToDos(0)
