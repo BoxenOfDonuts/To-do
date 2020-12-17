@@ -1,3 +1,4 @@
+import { fromUnixTime } from "date-fns";
 import { divFactory, createText } from "./utils"
 
 const formElements = (labelContent, placeholder, name, type, classN) => {
@@ -66,6 +67,27 @@ const getFormInputs = () => {
 
 }
 
+const generateToDoForm = () => {
+    const parent = divFactory('todo-container');
+    const titleForm = formElements('', 'e.g. wash the car', 'title', 'text', 'task');
+    parent.appendChild(titleForm.label);
+    parent.appendChild(titleForm.input);
+
+    return parent
+}
+
+const generateToDoOptions = () => {
+    return `<input type="date" name="due-date">
+    <label for="priority"></label>
+        <select>
+            <option value="0">Normal</option>
+            <option value="1">Medium</option>
+            <option value="2">High</option>
+    </select>`
+
+
+}
+
 const generateProjectForm = () => {
     const parent = divFactory('form', 'project-form');
     const formHeader = getFormHeader('Add a project');
@@ -80,4 +102,22 @@ const generateProjectForm = () => {
     return parent
 }
 
-export { generateProjectForm }
+const generateTaskForm = () => {
+    const parent = divFactory('todo-form');
+    const form = document.createElement('form');
+    const tdcontainer = generateToDoForm();
+    const options = divFactory('form-container')
+    options.innerHTML = generateToDoOptions();
+    const footer = getFormFooter();
+    footer.classList.add('todo-footer');
+
+    form.appendChild(tdcontainer)
+    form.appendChild(options);
+    form.appendChild(footer);
+
+    parent.appendChild(form);
+
+    return parent;
+}
+
+export { generateProjectForm, generateTaskForm }

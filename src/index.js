@@ -1,4 +1,4 @@
-import { generateProjectForm } from './scripts/forms'
+import { generateProjectForm, generateTaskForm } from './scripts/forms'
 import { divFactory, createText } from './scripts/utils'
 import { projectItem, todoItem } from './scripts/objects'
 
@@ -38,18 +38,11 @@ const displayController = (() => {
     }
 
     const _projectFormEventListeners = () => {
-        const formButtons = document.querySelectorAll('.project-form button')
-        const overlay = document.querySelector('.dialog-overlay')
-        // const inputs = document.querySelectorAll('.form-body > input[type=text')
+    }
 
-        // removes event listener after it fires
-        overlay.addEventListener('click', handleProjectForm)
-    
-        formButtons.forEach((button) => {
-            button.addEventListener('click', handleProjectForm)
-        })
-
-
+    const _addTaskListener = () => {
+        const addButton = document.querySelector('.add-todo');
+        addButton.addEventListener('click', handleAddTask)
     }
 
     const drawProjectForm = () => {
@@ -61,7 +54,18 @@ const displayController = (() => {
         parent.insertAdjacentElement('afterbegin', overlay)
         overlay.appendChild(generateProjectForm())
 
-        _projectFormEventListeners()
+        // was in the _projectFormEventListeners
+        eventListenerController.addForEach('.project-form button', 'click', handleProjectForm);
+        eventListenerController.add('.dialog-overlay', 'click', handleProjectForm)
+
+    }
+
+    const drawTaskForm = () => {
+        const parent = document.querySelector('.action-li');
+        _clearChildNodesOf(parent);
+        parent.append(generateTaskForm());
+
+        eventListenerController.addForEach('.todo-footer button', 'click', handleTaskForm);
 
     }
 
@@ -95,15 +99,18 @@ const displayController = (() => {
 
     const _drawAddActions = (title) => {
         const parent = document.createElement('li')
+        parent.classList.add('action-li');
         parent.innerHTML =  `<div class="action add-todo">
                     <i class="las la-plus"></i>
                     <p>${title}</p>
                 </div>`
+
         return parent;
     }
 
     const drawProjectToDos = (key) => {
-        const parent = document.querySelector('.todos-list');
+        const parent = document.querySelector('.todo-list');
+        parent.dataset['currentProject'] = key;
         _clearChildNodesOf(parent);
         let array = projectController.listProjectItems(key);
         const list = document.createElement('ul');
@@ -122,6 +129,7 @@ const displayController = (() => {
         })
         
         parent.appendChild(list)
+        _addTaskListener()
     }
 
     const closeForm = () => {
@@ -130,8 +138,8 @@ const displayController = (() => {
         overlay.remove();
     }
 
-    return { drawProjectForm, drawProjects, drawProjectToDos, closeForm }
-})()
+    return { drawProjectForm, drawProjects, drawProjectToDos, closeForm, drawTaskForm }
+})();
 
 const projectController = (() => {
     let projectList = []
@@ -150,7 +158,22 @@ const projectController = (() => {
     const listProjectItems = (key) => projectList[key].getItems()
 
     return { addProject, listProjects, listProjectItems }
-})()
+})();
+
+const eventListenerController = (() => {
+    const add = (selector, type, func) => {
+        const parent = document.querySelector(selector);
+        parent.addEventListener(type, func);
+    }
+
+    const addForEach = (selector, type, func) => {
+        const parent = document.querySelectorAll(selector);
+        parent.forEach(child => child.addEventListener(type, func));
+    }
+
+    return { add, addForEach }
+
+})();
 
 function handleClick(e) {
     displayController.drawProjectForm()
@@ -187,6 +210,17 @@ function grabForm() {
     displayController.drawProjects()
 }
 
+function handleTaskForm(e) {
+    const target = e.target;
+    const project = document.querySelector('.todo-list').dataset.currentProject
+
+    if (target === 'add') {
+        console.log('adding')
+    } else {
+        displayController.drawProjectToDos(project)
+    }
+}
+
 const projects = document.querySelector('.projects');
 projects.addEventListener('click', e => {
     const projectItem = e.target.closest('li');
@@ -198,6 +232,9 @@ projects.addEventListener('click', e => {
 
 })
 
+function handleAddTask(e) {
+    displayController.drawTaskForm()
+}
 
 
 // displayController.drawProjectForm();
