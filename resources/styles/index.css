@@ -140,7 +140,7 @@ li {
     padding: 15px;
 }
 
-.todos-list {
+.todo-list {
     display: flex;
     justify-content: center;
     max-width: 70%;
@@ -159,10 +159,13 @@ li {
 
 .todo-item > div, input[type='checkbox'] {
     margin: 10px;
+    width: 200px;
 }
 
 .todo-form {
     background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
 }
 
 .todo-footer > .button {
@@ -185,3 +188,13 @@ li {
 input[type=text]:focus {
     outline:none;
 } 
+
+.action-li {
+    margin: 10px 0 30px
+}
+
+select, input[type="date"] {
+    height: 24px;
+    margin-right: 10px;
+}
+
