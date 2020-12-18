@@ -198,3 +198,8 @@ select, input[type="date"] {
     margin-right: 10px;
 }
 
+.project-counter {
+    padding-left: 10px;
+    font-weight: 200;
+    font-size: .85em;
+}
