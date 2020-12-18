@@ -15,13 +15,27 @@ const getPriority = (data) => ({
 })
 
 const getToDos = (data) => ({
-    // getItems: () => {
-    //     data.list.forEach(item => {
-    //         console.log(item.title())
-    //     })
-    // }
-
     getItems: () => data.list,
+    unpackItems: () => {
+        const unpacked = data.list.map(task => {
+            const taskObject = {
+                title: task.title(),
+                description: task.description(),
+                dueDate: task.dueDate(),
+                priority: task.priority(),
+            }
+            return taskObject
+        })
+
+        const projectItem = {
+            title: data.title,
+            description: data.description,
+            unpacked: unpacked,
+            item: data.item,
+        }
+
+        return projectItem;
+    }
 })
 
 const pushNewItem = (data) => ({
