@@ -17,7 +17,7 @@ const getPriority = (data) => ({
 const getToDos = (data) => ({
     getItems: () => data.list,
     unpackItems: () => {
-        const unpacked = data.list.map(task => {
+        const unpacked = data.list.map((task) => {
             const taskObject = {
                 title: task.title(),
                 description: task.description(),
@@ -30,12 +30,12 @@ const getToDos = (data) => ({
         const projectItem = {
             title: data.title,
             description: data.description,
-            unpacked: unpacked,
+            unpacked,
             item: data.item,
         }
 
-        return projectItem;
-    }
+        return projectItem
+    },
 })
 
 const pushNewItem = (data) => ({
@@ -57,31 +57,29 @@ const todoItem = (title, description, dueDate, priority) => {
         priority,
     }
 
-    return Object.assign(
-        {},
-        getTitle(data),
-        getDescription(data),
-        getDueDate(data),
-        getPriority(data)
-    )
+    return {
+        ...getTitle(data),
+        ...getDescription(data),
+        ...getDueDate(data),
+        ...getPriority(data),
+    }
 }
 
 const projectItem = (title, description) => {
-    let data = {
+    const data = {
         title,
         description,
         list: [],
         item: '',
     }
 
-    return Object.assign(
-        {},
-        getTitle(data),
-        getDescription(data),
-        getToDos(data),
-        pushNewItem(data),
-        getNumberTodos(data)
-    )
+    return {
+        ...getTitle(data),
+        ...getDescription(data),
+        ...getToDos(data),
+        ...pushNewItem(data),
+        ...getNumberTodos(data),
+    }
 }
 
 export { projectItem, todoItem }
