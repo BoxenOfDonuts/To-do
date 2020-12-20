@@ -27,14 +27,14 @@ const getToDos = (data) => ({
             return taskObject
         })
 
-        const projectItem = {
+        const projectTask = {
             title: data.title,
             description: data.description,
             unpacked,
             item: data.item,
         }
 
-        return projectItem
+        return projectTask
     },
 })
 

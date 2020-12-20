@@ -3,6 +3,7 @@ import { divFactory, createText } from './scripts/utils'
 import { projectItem, todoItem } from './scripts/objects'
 
 import './resources/styles/index.css'
+import { doc } from 'prettier'
 
 const displayController = (() => {
     const _projectItemLayout = (name, count) => {
@@ -102,7 +103,7 @@ const displayController = (() => {
             )
             li.dataset.projectKey = counter
             projectList.appendChild(li)
-            counter++
+            counter += 1
         })
 
         projects.appendChild(projectList)
@@ -136,7 +137,7 @@ const displayController = (() => {
             )
             li.dataset.itemKey = counter
             list.appendChild(li)
-            counter++
+            counter += 1
         })
 
         parent.appendChild(list)
@@ -189,7 +190,8 @@ const projectController = (() => {
 
     const removeProject = (project) => {
         // placeholder, update
-        projectList.slice(0, 1)
+        // projectList.slice(0, 1)
+        console.log('dleteing or something')
         _save()
     }
 
@@ -219,6 +221,7 @@ const projectController = (() => {
         addTaskToProject,
         numberOfProjects,
         initialProjectLoad,
+        removeProject,
     }
 })()
 
@@ -325,10 +328,28 @@ projects.addEventListener('click', (e) => {
     const projectItem = e.target.closest('li')
     if (!projectItem) return
     const key = projectItem.dataset.projectKey
-    console.log(key)
 
     displayController.drawProjectToDos(key)
 })
+
+function handleChecks(e) {
+    const li = e.target.closest('li')
+    if (!li) return
+    const key = li.dataset.itemKey
+    setTimeout(() => {
+        projectController.removeProject()
+    }, 3000)
+
+    // if (li.classList.contains('deleted-scale')) {
+    //     li.classList.add('deleted')
+    // } else {
+    //     li.classList.add('deleted-scale')
+    // }
+}
+
+const checkboxes = document.querySelector('.task-tab')
+checkboxes.addEventListener('change', handleChecks)
+checkboxes.addEventListener('transitionend', handleChecks)
 
 function handleAddTask(e) {
     displayController.drawTaskForm()

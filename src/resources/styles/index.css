@@ -203,3 +203,17 @@ select, input[type="date"] {
     font-weight: 200;
     font-size: .85em;
 }
+
+/* .deleted-scale {
+    transition: transform .3s ease-out;
+    transform: scale(1.02);
+}
+
+.deleted {
+    transition: transform .2s ease-out;
+    transform: scale(0);
+} */
+
+.todo-item > input[type=checkbox]:checked ~ div {
+    text-decoration: line-through;
+}
