@@ -1,3 +1,5 @@
+import { da } from "date-fns/locale"
+
 const getTitle = (data) => ({
     title: () => data.title,
 })
@@ -14,9 +16,18 @@ const getPriority = (data) => ({
     priority: () => data.priority,
 })
 
+const unpackTask = (data) => ({
+    unpackItems: () => ({
+        title: data.title,
+        description: data.description,
+        dueDate: data.dueDate,
+        priority: data.priority,
+    }),
+})
+
 const getToDos = (data) => ({
     getItems: () => data.list,
-    unpackItems: () => {
+    unpackProjects: () => {
         const unpacked = data.list.map((task) => {
             const taskObject = {
                 title: task.title(),
@@ -62,6 +73,7 @@ const todoItem = (title, description, dueDate, priority) => {
         ...getDescription(data),
         ...getDueDate(data),
         ...getPriority(data),
+        ...unpackTask(data),
     }
 }
 

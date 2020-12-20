@@ -162,6 +162,17 @@ const displayController = (() => {
 const projectController = (() => {
     const projectList = []
 
+    const _unpack = () => {
+        const unpacked = projectList.map((project) => project.unpackProjects())
+        return unpacked
+    }
+
+    const _save = () => {
+        storageController.saveToLocalStorage(_unpack())
+    }
+
+    const _loadFromStorage = () => {}
+
     const listProjects = () => projectList
     const numberOfProjects = () => projectList.length
     const initialProjectLoad = (savedProjects) => {
@@ -191,8 +202,15 @@ const projectController = (() => {
     const removeProject = (project) => {
         // placeholder, update
         // projectList.slice(0, 1)
-        console.log('dleteing or something')
+        // _save()
+    }
+
+    const removeTask = (key) => {
+        const projectId = document.querySelector('.todo-list').dataset
+            .currentProject
+        projectList[projectId].getItems().splice(key, 1)
         _save()
+        displayController.drawProjectToDos(projectId)
     }
 
     const addTaskToProject = (key, todo) => {
@@ -200,17 +218,6 @@ const projectController = (() => {
         currentProject.addItem(todo)
         _save()
     }
-
-    const _unpack = () => {
-        const unpacked = projectList.map((project) => project.unpackItems())
-        return unpacked
-    }
-
-    const _save = () => {
-        storageController.saveToLocalStorage(_unpack())
-    }
-
-    const _loadFromStorage = () => {}
 
     const listProjectItems = (key) => projectList[key].getItems()
 
@@ -222,6 +229,7 @@ const projectController = (() => {
         numberOfProjects,
         initialProjectLoad,
         removeProject,
+        removeTask,
     }
 })()
 
@@ -269,7 +277,6 @@ function handleProjectForm(e) {
     e.stopPropagation()
     const target = e.target.value
     if (target === 'add') {
-        console.log('add')
         const { name, desc } = grabForm()
         projectController.addProject(projectItem(name, desc))
         cancelForm()
@@ -304,7 +311,6 @@ function handleTaskForm(e) {
 
     if (target === 'add') {
         const { title, date, priority } = grabTaskForm()
-        console.log(title, date, priority)
         const todo = todoItem('title', title, date, priority)
         projectController.addTaskToProject(project, todo)
         displayController.drawProjectToDos(project)
@@ -325,26 +331,27 @@ function grabTaskForm() {
 
 const projects = document.querySelector('.projects')
 projects.addEventListener('click', (e) => {
-    const projectItem = e.target.closest('li')
-    if (!projectItem) return
-    const key = projectItem.dataset.projectKey
+    const li = e.target.closest('li')
+    if (!li) return
+    const key = li.dataset.projectKey
 
     displayController.drawProjectToDos(key)
 })
 
 function handleChecks(e) {
     const li = e.target.closest('li')
-    if (!li) return
+    if (!li || !e.target.checked) return
     const key = li.dataset.itemKey
-    setTimeout(() => {
-        projectController.removeProject()
-    }, 3000)
 
     // if (li.classList.contains('deleted-scale')) {
     //     li.classList.add('deleted')
     // } else {
     //     li.classList.add('deleted-scale')
     // }
+
+    setTimeout(() => {
+        projectController.removeTask(key)
+    }, 3000)
 }
 
 const checkboxes = document.querySelector('.task-tab')
@@ -355,38 +362,6 @@ function handleAddTask(e) {
     displayController.drawTaskForm()
 }
 
-// displayController.drawProjectForm();
 const addProjectButton = document.querySelector('.add-project')
 addProjectButton.addEventListener('click', handleClick)
 storageController.loadFromLocalStorage()
-
-// // old things to fill the stuff with
-// let project1 = projectItem('New Project', 'My Super Cool Project')
-// let x = todoItem('To Do 1', 'IDK', 'never', '!!!')
-// let y = todoItem('To Do 2', 'IDK', 'never', '!!!')
-// let z = todoItem('To Do 3', 'IDK', 'never', '!!!')
-
-// project1.addItem(x)
-// project1.addItem(y)
-// project1.addItem(z)
-
-// let project2 = projectItem('New Project 2', 'My Super Cool Project')
-// project2.addItem(x)
-// project2.addItem(y)
-// project2.addItem(z)
-
-// let project3 = projectItem('New Project 3', 'My Super Cool Project')
-
-// project3.addItem(x)
-
-// project1.getItems()
-// console.log(project1.test())
-
-// projectController.addProject(project1)
-// projectController.addProject(project2)
-// projectController.addProject(project3)
-
-// // projectController.addProject(project1);
-// displayController.drawProjects()
-
-// // displayController.drawProjectToDos(0)
