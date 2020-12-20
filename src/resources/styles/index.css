@@ -5,6 +5,12 @@
     /* border: 0 */
 }
 
+:root {
+    --main-color: #db4c3f;
+    --hover: #d8d8d8;
+    --add-disabled: #f4cac6;
+}
+
 li {
     list-style-type: none;
 }
@@ -12,17 +18,25 @@ li {
 #todo-app {
     display: grid;
     grid-template-columns: 1fr 4fr;
-    grid-template-rows: 1fr;
+    grid-template-rows: .05fr 1fr;
     height: 100vh;
 
 }
 
 .task-tab {
-    background-color: lightslategray;
+    /* background-color: lightslategray; */
 }
 
 .project-tab {
-    background-color: grey;
+    background-color: #f1f1f1;
+}
+
+.header {
+    grid-column: 1/4;
+    background-color:var(--main-color);
+    color: white;
+    text-align: center;
+    padding: 5px
 }
 
 .form {
@@ -85,7 +99,6 @@ li {
   }
 
   .form-header {
-      /* background-color: grey; */
       padding: 10px;
       border-bottom: 1px solid black;
 
@@ -108,7 +121,6 @@ li {
     right: 0;
     left: 0;
     bottom: 0;
-    /* pointer-events: all; */
 }
 
 .las {
@@ -137,7 +149,7 @@ li {
 }
 
 .projects {
-    padding: 15px;
+    padding: 15px 0 15px 15px;
 }
 
 .todo-list {
@@ -216,4 +228,18 @@ select, input[type="date"] {
 
 .todo-item > input[type=checkbox]:checked ~ div {
     text-decoration: line-through;
+}
+
+.project-item > .la-trash {
+    display: none;
+    float: right;
+    color: red;
+}
+
+.project-item:hover > .la-trash {
+    display: inline-block;
+}
+
+.project-item:hover {
+    background-color: var(--hover);
 }

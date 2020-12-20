@@ -1,21 +1,24 @@
+/* eslint-disable no-use-before-define */
 import { generateProjectForm, generateTaskForm } from './scripts/forms'
 import { divFactory, createText } from './scripts/utils'
 import { projectItem, todoItem } from './scripts/objects'
-
 import './resources/styles/index.css'
-import { doc } from 'prettier'
 
 const displayController = (() => {
-    const _projectItemLayout = (name, count) => {
+    const _projectItemLayout = (name, count, key) => {
         const li = document.createElement('li')
-        li.classList.add('project-li')
+        const button = document.createElement('i')
         const div = divFactory('project-item')
         const projectName = createText(name, 'span')
         const counter = createText(count, 'span')
+        button.value = key
+        button.classList.add('las', 'la-trash')
+        li.classList.add('project-li')
         counter.classList.add('project-counter')
 
         div.appendChild(projectName)
         div.appendChild(counter)
+        div.appendChild(button)
         li.appendChild(div)
 
         return li
@@ -38,6 +41,12 @@ const displayController = (() => {
         li.appendChild(div)
 
         return li
+    }
+
+    const _clearChildNodesOf = (node) => {
+        while (node.firstElementChild) {
+            node.firstElementChild.remove()
+        }
     }
 
     const _projectFormEventListeners = () => {}
@@ -81,34 +90,6 @@ const displayController = (() => {
         )
     }
 
-    const _clearChildNodesOf = (node) => {
-        while (node.firstElementChild) {
-            node.firstElementChild.remove()
-        }
-    }
-
-    const drawProjects = () => {
-        const parent = document.querySelector('.projects')
-        _clearChildNodesOf(parent)
-        const array = projectController.listProjects()
-        const projects = document.querySelector('.projects')
-        const projectList = document.createElement('ul')
-        let counter = 0
-
-        array.forEach((object) => {
-            console.log(object.getItems().length)
-            const li = _projectItemLayout(
-                object.title(),
-                object.getItems().length
-            )
-            li.dataset.projectKey = counter
-            projectList.appendChild(li)
-            counter += 1
-        })
-
-        projects.appendChild(projectList)
-    }
-
     const _drawAddActions = (title) => {
         const parent = document.createElement('li')
         parent.classList.add('action-li')
@@ -118,6 +99,27 @@ const displayController = (() => {
                 </div>`
 
         return parent
+    }
+
+    const drawProjects = () => {
+        const parent = document.querySelector('.projects')
+        _clearChildNodesOf(parent)
+        const array = projectController.listProjects()
+        const projectList = document.createElement('ul')
+        let counter = 0
+
+        array.forEach((object) => {
+            const li = _projectItemLayout(
+                object.title(),
+                object.getItems().length,
+                counter
+            )
+            li.dataset.projectKey = counter
+            projectList.appendChild(li)
+            counter += 1
+        })
+
+        parent.appendChild(projectList)
     }
 
     const drawProjectToDos = (key) => {
@@ -199,10 +201,12 @@ const projectController = (() => {
         _save()
     }
 
-    const removeProject = (project) => {
-        // placeholder, update
-        // projectList.slice(0, 1)
-        // _save()
+    const removeProject = (key) => {
+        const defaultDraw = key - 1 <= 0 ? 0 : key - 1
+        projectList.splice(key, 1)
+        _save()
+        displayController.drawProjects()
+        displayController.drawProjectToDos(0)
     }
 
     const removeTask = (key) => {
@@ -210,6 +214,7 @@ const projectController = (() => {
             .currentProject
         projectList[projectId].getItems().splice(key, 1)
         _save()
+        displayController.drawProjects()
         displayController.drawProjectToDos(projectId)
     }
 
@@ -331,10 +336,18 @@ function grabTaskForm() {
 
 const projects = document.querySelector('.projects')
 projects.addEventListener('click', (e) => {
+    const tag = e.target.tagName
+    if (tag !== 'I') return
+    const confirmAction = confirm('Are you Sure?')
+    if (confirmAction) {
+        const key = Number(e.target.value)
+        projectController.removeProject(key)
+    }
+})
+projects.addEventListener('click', (e) => {
     const li = e.target.closest('li')
-    if (!li) return
+    if (!li || e.target.tagName === 'I') return
     const key = li.dataset.projectKey
-
     displayController.drawProjectToDos(key)
 })
 
@@ -343,24 +356,18 @@ function handleChecks(e) {
     if (!li || !e.target.checked) return
     const key = li.dataset.itemKey
 
-    // if (li.classList.contains('deleted-scale')) {
-    //     li.classList.add('deleted')
-    // } else {
-    //     li.classList.add('deleted-scale')
-    // }
-
     setTimeout(() => {
         projectController.removeTask(key)
     }, 3000)
 }
 
-const checkboxes = document.querySelector('.task-tab')
-checkboxes.addEventListener('change', handleChecks)
-checkboxes.addEventListener('transitionend', handleChecks)
-
 function handleAddTask(e) {
     displayController.drawTaskForm()
 }
+
+const checkboxes = document.querySelector('.task-tab')
+checkboxes.addEventListener('change', handleChecks)
+checkboxes.addEventListener('transitionend', handleChecks)
 
 const addProjectButton = document.querySelector('.add-project')
 addProjectButton.addEventListener('click', handleClick)

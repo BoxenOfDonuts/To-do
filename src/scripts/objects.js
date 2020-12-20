@@ -1,5 +1,3 @@
-import { da } from "date-fns/locale"
-
 const getTitle = (data) => ({
     title: () => data.title,
 })
