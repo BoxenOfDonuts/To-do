@@ -11,13 +11,15 @@ const displayController = (() => {
         const div = divFactory('project-item')
         const projectName = createText(name, 'span')
         const counter = createText(count, 'span')
+        const textDiv = divFactory('text')
         button.value = key
         button.classList.add('las', 'la-trash')
         li.classList.add('project-li')
         counter.classList.add('project-counter')
 
-        div.appendChild(projectName)
-        div.appendChild(counter)
+        textDiv.appendChild(projectName)
+        textDiv.appendChild(counter)
+        div.appendChild(textDiv)
         div.appendChild(button)
         li.appendChild(div)
 
@@ -47,6 +49,36 @@ const displayController = (() => {
         while (node.firstElementChild) {
             node.firstElementChild.remove()
         }
+    }
+
+    const _setActiveProject = (key) => {
+        const projectsItems = document.querySelectorAll('.project-li')
+        const newActiveProject = document.querySelector(
+            `li[data-project-key='${key}']`
+        )
+        projectsItems.forEach((project) => {
+            if (project.classList.contains('active')) {
+                project.classList.remove('active')
+            }
+        })
+
+        newActiveProject.classList.add('active')
+    }
+
+    const _drawAddActions = (title) => {
+        const parent = document.createElement('li')
+        parent.classList.add('action-li')
+        parent.innerHTML = `<div class="action add-todo">
+                    <p class="plus">+</p>
+                    <p>${title}</p>
+                </div>`
+
+        return parent
+    }
+
+    const _updateTaskHeader = (project) => {
+        const header = document.querySelector('.task-tab > h1')
+        header.innerHTML = project
     }
 
     const _projectFormEventListeners = () => {}
@@ -90,17 +122,6 @@ const displayController = (() => {
         )
     }
 
-    const _drawAddActions = (title) => {
-        const parent = document.createElement('li')
-        parent.classList.add('action-li')
-        parent.innerHTML = `<div class="action add-todo">
-                    <i class="las la-plus"></i>
-                    <p>${title}</p>
-                </div>`
-
-        return parent
-    }
-
     const drawProjects = () => {
         const parent = document.querySelector('.projects')
         _clearChildNodesOf(parent)
@@ -126,6 +147,7 @@ const displayController = (() => {
         const parent = document.querySelector('.todo-list')
         parent.dataset.currentProject = key
         _clearChildNodesOf(parent)
+        if (key === false) return
         const array = projectController.listProjectItems(key)
         const list = document.createElement('ul')
         list.appendChild(_drawAddActions('Add Task'))
@@ -143,6 +165,8 @@ const displayController = (() => {
         })
 
         parent.appendChild(list)
+        _updateTaskHeader(projectController.projectTitle(key))
+        _setActiveProject(key)
         _addTaskListener()
     }
 
@@ -175,8 +199,29 @@ const projectController = (() => {
 
     const _loadFromStorage = () => {}
 
+    const listProjectItems = (key) => projectList[key].getItems()
+
+    const projectTitle = (key) => projectList[key].title()
+
     const listProjects = () => projectList
+
     const numberOfProjects = () => projectList.length
+
+    const welcomeProject = () => {
+        const welcome = projectItem('Welcome!', '')
+        const welcomeTask = todoItem(
+            '',
+            'Your First Task! Click the checkbox to complete me',
+            '',
+            0
+        )
+
+        welcome.addItem(welcomeTask)
+        projectList.push(welcome)
+        displayController.drawProjects()
+        displayController.drawProjectToDos(0)
+    }
+
     const initialProjectLoad = (savedProjects) => {
         // projectList = [...savedProjects];
         savedProjects.forEach((project) => {
@@ -206,7 +251,12 @@ const projectController = (() => {
         projectList.splice(key, 1)
         _save()
         displayController.drawProjects()
-        displayController.drawProjectToDos(0)
+        if (projectList.length !== 0) {
+            displayController.drawProjectToDos(defaultDraw)
+        } else {
+            storageController.removeFromLocalStorage()
+            displayController.drawProjectToDos(false)
+        }
     }
 
     const removeTask = (key) => {
@@ -224,8 +274,6 @@ const projectController = (() => {
         _save()
     }
 
-    const listProjectItems = (key) => projectList[key].getItems()
-
     return {
         addProject,
         listProjects,
@@ -235,6 +283,8 @@ const projectController = (() => {
         initialProjectLoad,
         removeProject,
         removeTask,
+        projectTitle,
+        welcomeProject,
     }
 })()
 
@@ -254,6 +304,8 @@ const storageController = (() => {
 
         if (doesExist) {
             projectController.initialProjectLoad(JSON.parse(doesExist))
+        } else {
+            projectController.welcomeProject()
         }
     }
 

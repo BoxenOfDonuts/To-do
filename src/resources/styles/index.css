@@ -17,14 +17,14 @@ li {
 
 #todo-app {
     display: grid;
-    grid-template-columns: 1fr 4fr;
-    grid-template-rows: .05fr 1fr;
+    grid-template-columns: .5fr 4fr;
+    grid-template-rows: auto 1fr;
     height: 100vh;
 
 }
 
-.task-tab {
-    /* background-color: lightslategray; */
+.task-tab > h1 {
+    text-align: center;
 }
 
 .project-tab {
@@ -35,8 +35,12 @@ li {
     grid-column: 1/4;
     background-color:var(--main-color);
     color: white;
-    text-align: center;
-    padding: 5px
+    /* text-align: center; */
+    padding: 5px 5px 5px 20px;
+}
+
+.project-header > h1, .task-tab> h1{
+    padding: 5px 5px 5px 20px;
 }
 
 .form {
@@ -123,8 +127,9 @@ li {
     bottom: 0;
 }
 
-.las {
-    margin: 0 5px;
+.plus {
+    margin: 0 2px;
+    padding: 0 4.5px;
 }
 
 .project-actions {
@@ -138,18 +143,17 @@ li {
 
 .action:hover > p {
     color: red;
+    text-align: center;
 }
 
-.action:hover > .las {
+.action:hover > .plus {
     background-color: red;
     border-radius: 50%;
     color: white;
-    width: auto;
-    text-align:  center;
 }
 
 .projects {
-    padding: 15px 0 15px 15px;
+    padding: 15px 0 15px 20px;
 }
 
 .todo-list {
@@ -157,6 +161,7 @@ li {
     justify-content: center;
     max-width: 70%;
     margin: auto;
+    padding-top: 10px;
 }
 
 .todo-li {
@@ -171,7 +176,7 @@ li {
 
 .todo-item > div, input[type='checkbox'] {
     margin: 10px;
-    width: 200px;
+    /* width: 200px; */
 }
 
 .todo-form {
@@ -214,6 +219,7 @@ select, input[type="date"] {
     padding-left: 10px;
     font-weight: 200;
     font-size: .85em;
+    grid-area: 'count';
 }
 
 /* .deleted-scale {
@@ -230,10 +236,18 @@ select, input[type="date"] {
     text-decoration: line-through;
 }
 
+.project-item {
+    display: grid;
+    grid-template-columns: 1fr minmax(23px, auto);
+}
+
 .project-item > .la-trash {
     display: none;
     float: right;
     color: red;
+    box-sizing: border-box;
+    text-align: end;
+
 }
 
 .project-item:hover > .la-trash {
@@ -242,4 +256,16 @@ select, input[type="date"] {
 
 .project-item:hover {
     background-color: var(--hover);
+    margin-left: -20px;
+    padding-left: 20px;
+}
+
+.active {
+    font-weight: bold;
+}
+
+.action-li {
+    width: 777px;
+    padding: 0 20px 0 3px;
+    box-sizing: content-box;
 }
