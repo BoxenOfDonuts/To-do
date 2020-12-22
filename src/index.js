@@ -232,8 +232,6 @@ const projectController = (() => {
         storageController.saveToLocalStorage(_unpack())
     }
 
-    const _loadFromStorage = () => {}
-
     const listProjectItems = (key) => projectList[key].getItems()
 
     const projectTitle = (key) => projectList[key].title()
@@ -300,9 +298,9 @@ const projectController = (() => {
         const projectId = document.querySelector('.todo-list').dataset
             .currentProject
         projectList[projectId].getItems().splice(key, 1)
-        _save()
         displayController.drawProjects()
         displayController.drawProjectToDos(projectId)
+        _save()
     }
 
     const addTaskToProject = (key, todo) => {
@@ -314,6 +312,7 @@ const projectController = (() => {
     const modifyTask = (key, todo, itemKey) => {
         const currentProject = projectList[key]
         currentProject.modifyItem(todo, itemKey)
+        _save()
     }
 
     return {
@@ -439,7 +438,7 @@ function grabTaskForm() {
 function deleteProject(e) {
     const tag = e.target.tagName
     if (tag !== 'I') return
-    const confirmAction = confirm('Are you Sure?')
+    const confirmAction = window.confirm('Are you Sure?')
     if (confirmAction) {
         const key = Number(e.target.value)
         projectController.removeProject(key)
