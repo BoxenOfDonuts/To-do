@@ -47,9 +47,12 @@ const getToDos = (data) => ({
     },
 })
 
-const pushNewItem = (data) => ({
+const manageItems = (data) => ({
     addItem: (item) => {
         data.list.push(item)
+    },
+    modifyItem: (item, key) => {
+        data.list.splice(key, 1, item)
     },
 })
 
@@ -87,7 +90,7 @@ const projectItem = (title, description) => {
         ...getTitle(data),
         ...getDescription(data),
         ...getToDos(data),
-        ...pushNewItem(data),
+        ...manageItems(data),
         ...getNumberTodos(data),
     }
 }

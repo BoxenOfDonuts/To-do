@@ -111,7 +111,7 @@ const generateProjectForm = () => {
     return parent
 }
 
-const generateTaskForm = (editingTaks) => {
+const generateTaskForm = () => {
     const parent = divFactory('todo-form')
     const form = document.createElement('form')
     const tdcontainer = generateToDoForm()
@@ -120,15 +120,10 @@ const generateTaskForm = (editingTaks) => {
     const footer = getFormFooter()
     footer.classList.add('todo-footer')
 
-    if (editingTaks) {
-        console.log('do something')
-    } else {
-        form.appendChild(tdcontainer)
-        form.appendChild(options)
-        form.appendChild(footer)
-
-        parent.appendChild(form)
-    }
+    form.appendChild(tdcontainer)
+    form.appendChild(options)
+    form.appendChild(footer)
+    parent.appendChild(form)
 
     return parent
 }

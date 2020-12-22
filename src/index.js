@@ -91,8 +91,6 @@ const displayController = (() => {
         header.innerHTML = project
     }
 
-    const _projectFormEventListeners = () => {}
-
     const _addTaskListener = () => {
         const addButton = document.querySelector('.add-todo')
         addButton.addEventListener('click', handleAddTask)
@@ -140,6 +138,7 @@ const displayController = (() => {
 
         if (instigator.dataset.itemKey) {
             const taskObject = _currentTaskValues(itemKey)
+            const button = document.querySelector('.button.add')
             const title = document.querySelector('.todo-container > .task')
             const date = document.querySelector(
                 '.form-container > input[type=date]'
@@ -149,6 +148,7 @@ const displayController = (() => {
             title.value = taskObject.description
             date.value = taskObject.dueDate
             priority.selectedIndex = taskObject.priority
+            button.textContent = 'Change'
         }
 
         eventListenerController.addForEach(
@@ -311,6 +311,11 @@ const projectController = (() => {
         _save()
     }
 
+    const modifyTask = (key, todo, itemKey) => {
+        const currentProject = projectList[key]
+        currentProject.modifyItem(todo, itemKey)
+    }
+
     return {
         addProject,
         listProjects,
@@ -322,6 +327,7 @@ const projectController = (() => {
         removeTask,
         projectTitle,
         welcomeProject,
+        modifyTask,
     }
 })()
 
@@ -402,9 +408,14 @@ function grabForm() {
 function handleTaskForm(e) {
     const target = e.target.value
     const project = document.querySelector('.todo-list').dataset.currentProject
+    const { itemKey } = e.target.closest('li').dataset
 
-    if (target !== 'add') {
+    if (target === 'add' && itemKey) {
+        const { title, date, priority } = grabTaskForm()
+        const todo = todoItem('title', title, date, priority)
+        projectController.modifyTask(project, todo, itemKey)
         displayController.drawProjectToDos(project)
+        displayController.drawProjects()
     } else if (target === 'add') {
         const { title, date, priority } = grabTaskForm()
         const todo = todoItem('title', title, date, priority)
@@ -412,9 +423,7 @@ function handleTaskForm(e) {
         displayController.drawProjectToDos(project)
         displayController.drawProjects()
     } else {
-        console.log(
-            'switch these two maybe, but one updates and one adds? or add if statement above'
-        )
+        displayController.drawProjectToDos(project)
     }
 }
 
@@ -451,17 +460,20 @@ function handleChecks(e) {
 
     setTimeout(() => {
         projectController.removeTask(key, e)
-    }, 3000)
+    }, 2000)
 }
 
 function handleAddTask() {
     const instigator = document.querySelector('.action-li')
+    const form = document.querySelector('.todo-form')
+    if (form !== null) return
     displayController.drawTaskForm(instigator)
 }
 
 function editTasks(e) {
     const li = e.target.closest('li')
-    if (!li || e.target.nodeName !== 'DIV') return
+    const form = document.querySelector('.todo-form')
+    if (!li || e.target.nodeName !== 'DIV' || form !== null) return
     displayController.drawTaskForm(li)
 }
 
