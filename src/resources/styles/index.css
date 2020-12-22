@@ -9,6 +9,11 @@
     --main-color: #db4c3f;
     --hover: #d8d8d8;
     --add-disabled: #f4cac6;
+    --medium-priority: orange;
+    --high-priority: #990000;
+    --input-color:  #f1f1f1;
+    --plain-red: red;
+    --overlay-color:  rgba(0, 0, 0, 0.5);
 }
 
 li {
@@ -40,7 +45,7 @@ li {
 }
 
 .project-header > h1, .task-tab> h1{
-    padding: 5px 5px 5px 20px;
+    padding: 5px 15px 5px 20px;
 }
 
 .form {
@@ -83,7 +88,7 @@ li {
         padding: 15px;
         margin: 5px 0 22px 0;
         border: none;
-        background: #f1f1f1;
+        background:var(--input-color);
   }
 
   .button {
@@ -94,12 +99,12 @@ li {
   }
   
   .add {
-      background-color: red;
+      background-color: var(--plain-red);
       color: white;
   }
 
   .add:disabled {
-    background-color: #f4cac6;
+    background-color:var(--add-disabled);
   }
 
   .form-header {
@@ -117,7 +122,7 @@ li {
 }
 
 .dialog-overlay {
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color:var(--overlay-color);
     position: fixed;
     width: 100%;
     height: 100%;
@@ -142,12 +147,12 @@ li {
 }
 
 .action:hover > p {
-    color: red;
+    color: var(--plain-red);
     text-align: center;
 }
 
 .action:hover > .plus {
-    background-color: red;
+    background-color: var(--plain-red);
     border-radius: 50%;
     color: white;
 }
@@ -165,18 +170,28 @@ li {
 }
 
 .todo-li {
-    border: 1px solid black;
+    border-top: 1px solid black;
     width: 100%;
 }
 
+.todo-list > ul {
+    border-bottom: 1px solid black
+
+}
+
 .todo-item {
-    display: flex;
-    justify-content: space-evenly;
+    display: grid;
+    grid-template-columns: 40px auto 150px 30px;
 }
 
 .todo-item > div, input[type='checkbox'] {
     margin: 10px;
     /* width: 200px; */
+}
+
+input[type='checkbox'] {
+    width: 1.5em;
+    height: 1.5em;
 }
 
 .todo-form {
@@ -205,10 +220,6 @@ li {
 input[type=text]:focus {
     outline:none;
 } 
-
-.action-li {
-    margin: 10px 0 30px
-}
 
 select, input[type="date"] {
     height: 24px;
@@ -244,7 +255,7 @@ select, input[type="date"] {
 .project-item > .la-trash {
     display: none;
     float: right;
-    color: red;
+    color: var(--plain-red);
     box-sizing: border-box;
     text-align: end;
 
@@ -267,5 +278,14 @@ select, input[type="date"] {
 .action-li {
     width: 777px;
     padding: 0 20px 0 3px;
+    margin: 10px 0 20px;
     box-sizing: content-box;
+}
+
+.medium {
+    color: orange;
+}
+
+.high {
+    color: #990000;
 }

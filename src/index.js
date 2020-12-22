@@ -34,7 +34,10 @@ const displayController = (() => {
         checkbox.setAttribute('type', 'checkbox')
         const desc = createText(description, 'div')
         const date = createText(dueDate, 'div')
-        const pri = createText(priority, 'div')
+        const pri = createText(_repeatPriority(priority), 'div')
+
+        const priorityClass = ['low', 'medium', 'high']
+        pri.classList.add(priorityClass[priority])
 
         div.appendChild(checkbox)
         div.appendChild(desc)
@@ -43,6 +46,13 @@ const displayController = (() => {
         li.appendChild(div)
 
         return li
+    }
+
+    const _repeatPriority = (num) => {
+        if (num > 0) {
+            return '!'.repeat(num)
+        }
+        return ''
     }
 
     const _clearChildNodesOf = (node) => {
@@ -88,6 +98,16 @@ const displayController = (() => {
         addButton.addEventListener('click', handleAddTask)
     }
 
+    const _currentTaskValues = (key) => {
+        const parentKey = document.querySelector('.todo-list').dataset
+            .currentProject
+        const taskObject = projectController
+            .listProjectItems(parentKey)
+            [key].unpackItems()
+
+        return taskObject
+    }
+
     const drawProjectForm = () => {
         const parent = document.querySelector('body')
         const overlay = document.createElement('div')
@@ -110,10 +130,26 @@ const displayController = (() => {
         )
     }
 
-    const drawTaskForm = () => {
-        const parent = document.querySelector('.action-li')
+    const drawTaskForm = (instigator) => {
+        const parent = instigator
+        const { itemKey } = parent.dataset
+        // const taskObject = _currentTaskValues(itemKey)
+
         _clearChildNodesOf(parent)
         parent.append(generateTaskForm())
+
+        if (instigator.dataset.itemKey) {
+            const taskObject = _currentTaskValues(itemKey)
+            const title = document.querySelector('.todo-container > .task')
+            const date = document.querySelector(
+                '.form-container > input[type=date]'
+            )
+            const priority = document.querySelector('.form-container > select')
+            // https://www.w3schools.com/jsref/dom_obj_select.asp
+            title.value = taskObject.description
+            date.value = taskObject.dueDate
+            priority.selectedIndex = taskObject.priority
+        }
 
         eventListenerController.addForEach(
             '.todo-footer button',
@@ -172,7 +208,6 @@ const displayController = (() => {
 
     const closeForm = () => {
         const overlay = document.querySelector('.dialog-overlay')
-        // overlay.removeEventListener('click', handleProjectForm);
         overlay.remove()
     }
 
@@ -213,7 +248,7 @@ const projectController = (() => {
             '',
             'Your First Task! Click the checkbox to complete me',
             '',
-            0
+            2
         )
 
         welcome.addItem(welcomeTask)
@@ -259,7 +294,9 @@ const projectController = (() => {
         }
     }
 
-    const removeTask = (key) => {
+    const removeTask = (key, e) => {
+        // if they uncheck it before it deltes, stop!
+        if (!e.target.checked) return
         const projectId = document.querySelector('.todo-list').dataset
             .currentProject
         projectList[projectId].getItems().splice(key, 1)
@@ -366,14 +403,18 @@ function handleTaskForm(e) {
     const target = e.target.value
     const project = document.querySelector('.todo-list').dataset.currentProject
 
-    if (target === 'add') {
+    if (target !== 'add') {
+        displayController.drawProjectToDos(project)
+    } else if (target === 'add') {
         const { title, date, priority } = grabTaskForm()
         const todo = todoItem('title', title, date, priority)
         projectController.addTaskToProject(project, todo)
         displayController.drawProjectToDos(project)
         displayController.drawProjects()
     } else {
-        displayController.drawProjectToDos(project)
+        console.log(
+            'switch these two maybe, but one updates and one adds? or add if statement above'
+        )
     }
 }
 
@@ -386,8 +427,7 @@ function grabTaskForm() {
     return { title, date, priority }
 }
 
-const projects = document.querySelector('.projects')
-projects.addEventListener('click', (e) => {
+function deleteProject(e) {
     const tag = e.target.tagName
     if (tag !== 'I') return
     const confirmAction = confirm('Are you Sure?')
@@ -395,13 +435,14 @@ projects.addEventListener('click', (e) => {
         const key = Number(e.target.value)
         projectController.removeProject(key)
     }
-})
-projects.addEventListener('click', (e) => {
+}
+
+function changeProject(e) {
     const li = e.target.closest('li')
     if (!li || e.target.tagName === 'I') return
     const key = li.dataset.projectKey
     displayController.drawProjectToDos(key)
-})
+}
 
 function handleChecks(e) {
     const li = e.target.closest('li')
@@ -409,18 +450,26 @@ function handleChecks(e) {
     const key = li.dataset.itemKey
 
     setTimeout(() => {
-        projectController.removeTask(key)
+        projectController.removeTask(key, e)
     }, 3000)
 }
 
-function handleAddTask(e) {
-    displayController.drawTaskForm()
+function handleAddTask() {
+    const instigator = document.querySelector('.action-li')
+    displayController.drawTaskForm(instigator)
 }
 
-const checkboxes = document.querySelector('.task-tab')
-checkboxes.addEventListener('change', handleChecks)
-checkboxes.addEventListener('transitionend', handleChecks)
+function editTasks(e) {
+    const li = e.target.closest('li')
+    if (!li || e.target.nodeName !== 'DIV') return
+    displayController.drawTaskForm(li)
+}
 
-const addProjectButton = document.querySelector('.add-project')
-addProjectButton.addEventListener('click', handleClick)
+eventListenerController.add('.projects', 'click', deleteProject)
+eventListenerController.add('.projects', 'click', changeProject)
+eventListenerController.add('.task-tab', 'change', handleChecks)
+eventListenerController.add('.task-tab', 'transitioned', handleChecks)
+eventListenerController.add('.task-tab', 'click', editTasks)
+eventListenerController.add('.add-project', 'click', handleClick)
+
 storageController.loadFromLocalStorage()
