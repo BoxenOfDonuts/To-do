@@ -369,7 +369,7 @@ const eventListenerController = (() => {
     return { add, addForEach }
 })()
 
-function handleClick(e) {
+function handleClick() {
     displayController.drawProjectForm()
 }
 
