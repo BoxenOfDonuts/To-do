@@ -1,22 +1,22 @@
 const divFactory = (...classNames) => {
-    const div = document.createElement('div')
+    const div = document.createElement('div');
     if (classNames) {
         classNames.forEach((className) => {
-            div.classList.add(className)
-        })
+            div.classList.add(className);
+        });
     }
 
-    return div
-}
+    return div;
+};
 
 const createText = (content, type) => {
-    const text = document.createElement(type)
+    const text = document.createElement(type);
 
     if (content || content === 0) {
-        text.innerText = content
+        text.innerText = content;
     }
 
-    return text
-}
+    return text;
+};
 
-export { divFactory, createText }
+export { divFactory, createText };
