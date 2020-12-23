@@ -9,7 +9,7 @@
         {
           "trailingComma": "es5",
           "singleQuote": true,
-          "semi": false,
+          "semi": true,
           "tabWidth":4
         }
       ]
