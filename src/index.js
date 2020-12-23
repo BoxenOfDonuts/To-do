@@ -459,7 +459,7 @@ function handleChecks(e) {
 
     setTimeout(() => {
         projectController.removeTask(key, e)
-    }, 2000)
+    }, 1000)
 }
 
 function handleAddTask() {
